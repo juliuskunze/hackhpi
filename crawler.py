@@ -1,19 +1,13 @@
 import logging
+import re
 
 import scrapy
 
+from proxies import read_proxies
+
 URL_REGEX = r"window\.open\('([^']+)"
 
-proxies = [
-    '203.223.143.51:8080',
-    '203.223.143.51:8080',
-    '46.101.147.13:80',
-    '54.179.146.162:8083',
-    '123.30.191.141:80',
-    '200.233.154.5:80',
-    '220.130.196.155:8080',
-    '85.204.229.47:81'
-]
+proxies = read_proxies()
 
 class CVSpider(scrapy.Spider):
     name = 'cv_spider'
@@ -27,7 +21,7 @@ class CVSpider(scrapy.Spider):
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self.paging_offset = 0
+        self.paging_offset = 400
         self.proxy_iterator = iter(proxies)
         next(self.proxy_iterator)
 
