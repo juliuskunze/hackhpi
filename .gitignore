@@ -94,3 +94,6 @@ data/
 # idea
 .idea/
 *.iml
+
+# os x
+.DS_Store
