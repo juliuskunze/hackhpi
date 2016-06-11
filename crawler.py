@@ -13,7 +13,7 @@ class CVSpider(scrapy.Spider):
     name = 'cv_spider'
     start_urls = ['http://www.indeed.com/resumes?q=developer']
     download_delay = 1
-    user_agent = 'Mozilla/5.0 (Macintosh; U; PPC Mac OS X Mach-O; XH; rv:8.578.498) fr, Gecko/20121021 Camino/8.723+ (Firefox compatible)'
+    user_agent = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_3) AppleWebKit/537.75.14 (KHTML, like Gecko) Version/7.0.3 Safari/7046A194A'
     DOWNLOADER_MIDDLEWARES = {
         'scrapy.downloadermiddlewares.httpproxy.HttpProxyMiddleware': 543
     }
