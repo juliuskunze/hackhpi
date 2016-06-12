@@ -14,4 +14,4 @@ def generate_html_file(input_conll_file: str, output_html_file: str):
 
 
 
-generate_html_file(input_conll_file=generate_conll_file(), output_html_file="data/format.html")
+generate_html_file(input_conll_file=generate_conll_file(), output_html_file="highlighting/format.html")

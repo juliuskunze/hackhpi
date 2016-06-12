@@ -9,18 +9,42 @@ class WordInfo:
         self.importance = child_count
         self.word_class = word_class
         self.nesting_level = nesting_level
-        self.is_root_subject = word_class == 'NOUN' and nesting_level == 1
-        self.is_root_verb = word_class == 'VERB' and nesting_level == 0
+        self.is_root_subject = word_class == 'NOUN' and nesting_level == 2
+        self.is_root_verb = word_class == 'VERB' and nesting_level == 1
 
 
 def sentences_from_conll(file: str = '/home/julius/prj/tensorflow-models/syntaxnet/tagged.conll') -> List[WordInfo]:
     data = open(file).read()
-    sentence_graphs = list(nltk.parse.DependencyGraph(tableString) for tableString in data.split('\n\n'))
+    sentence_graphs = list(sentence_graph for sentence_graph in list(nltk.parse.DependencyGraph(tableString) for tableString in data.split('\n\n')) if sentence_graph.root != None)
+
+    for sentence_graph in sentence_graphs:
+        for node in sentence_graph.nodes.values():
+            node['nesting_level'] = None
+
+        sentence_graph.root['nesting_level'] = 0
+        none_count = None
+        while (True):
+            none_count_new = len(list(node for node in sentence_graph.nodes.values() if node['nesting_level'] == None))
+            if none_count_new == none_count:
+                break
+
+            none_count = none_count_new
+
+            for node in sentence_graph.nodes.values():
+                if node['nesting_level']:
+                    children_indices = list(index for value in node['deps'].values() for index in value)
+                    for index in children_indices:
+                        child = sentence_graph.nodes[index]
+                        next = node['nesting_level'] + 1
+                        child['nesting_level'] = min(child['nesting_level'], next) if (child['nesting_level']) else next
 
     return list(words_with_importance_from(sentence_graph) for sentence_graph in sentence_graphs)
 
 
 def words_with_importance_from(sentence_graph: nltk.parse.DependencyGraph) -> List[WordInfo]:
-    return list(WordInfo(word=node['word'], child_count=len(node['deps'].values()), word_class=node['ctag']) for node in
+    return list(WordInfo(word=node['word'],
+                         child_count=len(node['deps'].values()),
+                         word_class=node['ctag'],
+                         nesting_level=node['nesting_level']) for node in
                 sentence_graph.nodes.values())[
            1:]
