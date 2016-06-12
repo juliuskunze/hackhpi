@@ -11,16 +11,21 @@ MEMBER_ID_REGEX = re.compile(r"^https://www\.linkedin\.com/in/([^?]+)")
 
 proxies = read_proxies()
 
+
 class CVSpider(scrapy.Spider):
     name = 'cv_spider'
     start_urls = ['https://www.linkedin.com/in/jonas-pohlmann-77a64b82']
     user_agent = 'Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36'
-    DOWNLOADER_MIDDLEWARES = {
-        'scrapy.downloadermiddlewares.httpproxy.HttpProxyMiddleware': 543
+    retry_times = 10
+    retry_http_codes = [500, 503, 504, 400, 403, 404, 408, 999]
+    downloader_middlewares = {
+        'scrapy.contrib.downloadermiddleware.retry.RetryMiddleware': 90,
+        'randomproxy.RandomProxy': 100,
+        'scrapy.contrib.downloadermiddleware.httpproxy.HttpProxyMiddleware': 110
     }
     http_proxy = proxies[0]
     handle_httpstatus_list = [999]
-
+    proxy_list = 'proxy_list.txt'
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -33,7 +38,6 @@ class CVSpider(scrapy.Spider):
 
     def parse(self, response):
         if response.status == 999:
-            self.http_proxy = next(self.proxy_iterator)
             yield self.request_for_url(response.url)
             return
 

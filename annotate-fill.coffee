@@ -10,7 +10,7 @@ lines = output.split '\n'
 ps = root 'p'
 ps.each (i, p) ->
   p = cheerio(p)
-  words = ("<span style='color:red'>#{word}</span>"for word in lines[i].split())
+  words = ("<span style='color:black;opacity:1'>#{word}</span>"for word in lines[i].split())
   p.html(words.join ' ')
 
 fs.writeFileSync 'out.html', root.html()
