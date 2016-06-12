@@ -13,4 +13,4 @@ def generate_html_file(input_conll_file: str, output_html_file: str):
     target.close()
 
 
-generate_html_file(input_conll_file='/home/julius/prj/tensorflow-models/syntaxnet/tagged.conll', output_html_file="format.html")
+generate_html_file(input_conll_file=generate_conll_file(), output_html_file="data/format.html")
