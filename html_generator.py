@@ -1,7 +1,9 @@
 from typing import List, Tuple
 
+from conll_reader import WordInfo
 
-def generate_html(sentences: List[List[Tuple[str, int, str]]]) -> str:
+
+def generate_html(sentences: List[List[WordInfo]]) -> str:
     result = """<!DOCTYPE html>
         <html>
         <head>
@@ -43,11 +45,11 @@ def generate_html(sentences: List[List[Tuple[str, int, str]]]) -> str:
         <body>
         """
     for sentence in sentences:
-        for word, importance, ctag in sentence:
+        for word in sentence:
             result += "" \
                       "<div class=\"word{0}\">{1} \
                        <span class=\"tooltiptext\">{2}</span> \
-                       </div>".format(str(importance), word, ctag)
+                       </div>".format(str(word.importance), word.word, word.word_class)
             result += " "
 
     result += """
