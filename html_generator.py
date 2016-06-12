@@ -1,18 +1,22 @@
-from typing import List, Tuple
+from typing import List
+
+from conll_reader import WordInfo
 
 
-def generate_html(sentences: List[List[Tuple[str, int, str]]]) -> str:
+def generate_html(sentences: List[List[WordInfo]]) -> str:
     result = """<!DOCTYPE html>
         <html>
         <head>
         <style>
-        .word0 {
+        div[class^=word].word0 {
             color: grey;
         }
-        .word*{
+        div[class^="word"]{
             color: black;
+            position: relative;
+            display: inline-block
         }
-        .word* .tooltiptext {
+        div[class^="word"] .tooltiptext {
             visibility: hidden;
             width: 120px;
             background-color: black;
@@ -31,26 +35,28 @@ def generate_html(sentences: List[List[Tuple[str, int, str]]]) -> str:
             transition: opacity 0.5s;
         }
 
-        .tooltip:hover .tooltiptext {
+        div[class^=word]:hover .tooltiptext {
             visibility: visible;
             opacity: 1;
         }
-
         </style>
         </head>
         <body>
         """
     for sentence in sentences:
-        for word, importance, ctag in sentence:
+        for word in sentence:
+            is_root = word.is_root_noun or word.is_root_verb
+            color = "color:red" if word.is_root_noun else "color:green" if word.is_root_verb else ''
             result += "" \
-                      "<div class=\"word{0}\">{1}" \
-                      " <span class=\"tooltiptext\">{2}</span>" \
-                      "</div>".format(str(importance), word, ctag)
-            result += " "
+                  "<div class=\"word{0}\" style=\"{2}\">{1}&nbsp \
+                   <span class=\"tooltiptext\" style=\"{2}\">{3}</span> \
+                   </div>".format(str(word.importance), word.word, color,
+                                  "{1} ({0})".format(str(word.nesting_level), word.word_class))
+
 
     result += """
-        </body>
-        </html>
-        """
+            </body>
+            </html>
+            """
 
     return result
