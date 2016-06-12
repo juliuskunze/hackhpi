@@ -6,7 +6,7 @@ halfGray = 0xd3d3d3
 
 
 def brightness_from_frequency(freq: float) -> float:
-    return .5 * freq + .5
+    return .6 * (freq * 2) + .4
 
 
 def generate_html(sentences: List[List[WordInfo]]) -> str:

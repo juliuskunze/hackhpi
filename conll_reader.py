@@ -7,7 +7,7 @@ from word2vec import frequencies
 
 class WordInfo:
     def __init__(self, word: str, child_count: int, word_class: str, nesting_level: int = 0, is_special: bool = False):
-        self.frequency = frequencies.frequency(word) * 100
+        self.frequency = frequencies.frequency(word)
         self.uniqueness =  1 / self.frequency if (self.frequency != 0) else 1
         self.word = word
         self.word_class = word_class
