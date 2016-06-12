@@ -2,9 +2,15 @@ from typing import List, Tuple
 
 from conll_reader import WordInfo
 
+LOWEST_GRAYSCALE = 0xd3d3d3
+
+def calculate_grayscale(percentage):
+    return(percentage* LOWEST_GRAYSCALE) + LOWEST_GRAYSCALE
+
 
 def generate_html(sentences: List[List[WordInfo]]) -> str:
     color=""
+
     result = """<!DOCTYPE html>
         <html>
         <head>
