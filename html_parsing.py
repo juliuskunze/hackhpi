@@ -13,6 +13,8 @@ class MLStripper(HTMLParser):
         return ''.join(self.fed)
 
 def strip_tags(html):
+    if html is None:
+        return ''
     s = MLStripper()
     s.feed(html)
-    return s.get_data()
+    return s.get_data().strip()
