@@ -9,10 +9,12 @@ def generate_html(sentences: List[List[Tuple[str, int, str]]]) -> str:
         .word0 {
             color: grey;
         }
-        .word*{
+        div[class^="word"]{
             color: black;
+            position: relative;
+            display: inline-block
         }
-        .word* .tooltiptext {
+        div[class^="word"] .tooltiptext {
             visibility: hidden;
             width: 120px;
             background-color: black;
@@ -43,9 +45,9 @@ def generate_html(sentences: List[List[Tuple[str, int, str]]]) -> str:
     for sentence in sentences:
         for word, importance, ctag in sentence:
             result += "" \
-                      "<div class=\"word{0}\">{1}" \
-                      " <span class=\"tooltiptext\">{2}</span>" \
-                      "</div>".format(str(importance), word, ctag)
+                      "<div class=\"word{0}\">{1} \
+                       <span class=\"tooltiptext\">{2}</span> \
+                       </div>".format(str(importance), word, ctag)
             result += " "
 
     result += """
