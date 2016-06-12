@@ -12,7 +12,8 @@ def sentences_from_conll(
 
 
 def words_with_importance_from(sentence_graph: nltk.parse.DependencyGraph) -> List[Tuple[str, int]]:
-    return list((node['word'], len(node['deps'].values())) for node in sentence_graph.nodes.values())[1:]
+    return list((node['word'], len(node['deps'].values()), node['ctag']) for node in sentence_graph.nodes.values())[
+           1:]
 
 # def dependants(sentence_graph: nltk.parse.DependencyGraph) -> List[Tuple[str, int]]:
 #     flattened_children = list(child for node in sentence_graph.nodes.values() for children in node['deps'].values() for child in children)

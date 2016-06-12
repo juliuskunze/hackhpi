@@ -1,6 +1,6 @@
 # use this to configure (once):
 # nltk.download()
-from conll import sentences_from_conll
+from conll_reader import sentences_from_conll
 from html_generator import generate_html
 from parsey import generate_conll_file
 
@@ -13,4 +13,4 @@ def generate_html_file(input_conll_file: str, output_html_file: str):
     target.close()
 
 
-generate_html_file(input_conll_file=generate_conll_file(), output_html_file="format.html")
+generate_html_file(input_conll_file='/home/julius/prj/tensorflow-models/syntaxnet/tagged.conll', output_html_file="format.html")

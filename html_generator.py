@@ -41,11 +41,11 @@ def generate_html(sentences: List[List[Tuple[str, int, str]]]) -> str:
         <body>
         """
     for sentence in sentences:
-        for word, importance in sentence:
+        for word, importance, ctag in sentence:
             result += "" \
                       "<div class=\"word{0}\">{1}" \
-                      " <span class=\"tooltiptext\">{3}</span>" \
-                      "</div>".format(str(importance), word)
+                      " <span class=\"tooltiptext\">{2}</span>" \
+                      "</div>".format(str(importance), word, ctag)
             result += " "
 
     result += """
