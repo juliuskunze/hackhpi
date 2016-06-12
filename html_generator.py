@@ -8,7 +8,7 @@ def generate_html(sentences: List[List[WordInfo]]) -> str:
         <html>
         <head>
         <style>
-        .word0 {
+        div[class^=word].word0 {
             color: grey;
         }
         div[class^="word"]{
@@ -35,7 +35,7 @@ def generate_html(sentences: List[List[WordInfo]]) -> str:
             transition: opacity 0.5s;
         }
 
-        .tooltip:hover .tooltiptext {
+        div[class^=word]:hover .tooltiptext {
             visibility: visible;
             opacity: 1;
         }
