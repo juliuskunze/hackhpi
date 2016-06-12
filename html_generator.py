@@ -47,6 +47,8 @@ def generate_html(sentences: List[List[WordInfo]]) -> str:
         for word in sentence:
             is_root = word.is_root_noun or word.is_root_verb
             color = "color:red" if word.is_root_noun else "color:green" if word.is_root_verb else ''
+			if word.is_special:
+				color = "color:blue"
             result += "" \
                   "<div class=\"word{0}\" style=\"{2}\">{1}&nbsp \
                    <span class=\"tooltiptext\" style=\"{2}\">{3}</span> \
