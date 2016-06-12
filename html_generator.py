@@ -2,15 +2,14 @@ from typing import List
 
 from conll_reader import WordInfo
 
-LOWEST_GRAYSCALE = 0xd3d3d3
+halfGray = 0xd3d3d3
 
-def calculate_grayscale(percentage):
-    return(percentage* LOWEST_GRAYSCALE) + LOWEST_GRAYSCALE
+
+def brightness_from_frequency(freq: float) -> float:
+    return .5 * freq + .5
 
 
 def generate_html(sentences: List[List[WordInfo]]) -> str:
-    color=""
-
     result = """<!DOCTYPE html>
         <html>
         <head>
@@ -52,16 +51,12 @@ def generate_html(sentences: List[List[WordInfo]]) -> str:
         """
     for sentence in sentences:
         for word in sentence:
-            is_root = word.is_root_noun or word.is_root_verb
-            color = "color:red" if word.is_root_noun else "color:green" if word.is_root_verb else ''
-			if word.is_special:
-				color = "color:blue"
+            color = "color:red" if word.is_root_noun else "color:green" if word.is_root_verb else "color:blue" if word.is_special else "color:black;opacity:{0}".format(
+                brightness_from_frequency(word.frequency))
             result += "" \
-                  "<div class=\"word{0}\" style=\"{2}\">{1}&nbsp \
-                   <span class=\"tooltiptext\" style=\"{2}\">{3}</span> \
-                   </div>".format(str(word.importance), word.word, color,
-                                  "{1} ({0})".format(str(word.nesting_level), word.word_class))
-
+                      "<div class=\"word{0}\" style=\"{2}\">{1}&nbsp \
+                       <span class=\"tooltiptext\">{3}</span> \
+                       </div>".format('0', word.word, color,                                      "{1} ({0})".format(str(word.nesting_level), word.word_class))
 
     result += """
             </body>

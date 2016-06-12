@@ -1,23 +1,49 @@
+import heapq
 import logging
 import os
 import re
 import time
-from typing import List, Iterable
+from collections import Counter
+from typing import List, Iterable, Tuple, Dict
 
 import gensim
 from numpy.core.multiarray import dot
 
-from disambiguation import DATA_PATH, CORE_COUNT
-from disambiguation.wordfrequencies import WordFrequencies
+from operator import itemgetter
 
 REG_MATCH_DBP = re.compile(r'DBP:[^\s]+')
 
+class WordFrequencies:
+    def __init__(self, frequency_by_word: Dict[str, float], cut_off_most_common: int = 100):
+        self.frequency_by_word = frequency_by_word
+        for word in self.most_common_words(cut_off_most_common):
+            del self.frequency_by_word[word]
+
+    def most_common_words(self, n: int) -> List[str]:
+        return list(word for word, frequency in self.most_common_frequencies_by_word(n))
+
+    def most_common_frequencies_by_word(self, n: int = None) -> List[Tuple[int, str]]:
+        if n is None:
+            return sorted(self.frequency_by_word.items(), key=itemgetter(1), reverse=True)
+        return heapq.nlargest(n, self.frequency_by_word.items(), key=itemgetter(1))
+
+    def frequency(self, word: str) -> float:
+        if word in self.frequency_by_word.keys():
+            return self.frequency_by_word[word]
+        else:
+            return 0
 
 
-def data_file_path(name):
-    return DATA_PATH + "/" + name
+def word_frequencies(words: List[str], cut_off_most_common: int = 100) -> WordFrequencies:
+    total_count = len(words)
+    counter = Counter(words).items()
+    frequency_by_word = dict((word, value / total_count) for word, value in counter)
+
+    return WordFrequencies(frequency_by_word, cut_off_most_common=cut_off_most_common)
 
 
+def word_frequencies_from_sentences(sentences: Iterable[Iterable[str]]) -> WordFrequencies:
+    return word_frequencies(list(value for v in sentences for value in v))
 
 class Word2VecModel:
     def __init__(self, model: gensim.models.Word2Vec = None):
@@ -87,6 +113,10 @@ class Word2VecModel:
             return gensim.utils.RULE_DEFAULT
 
 
+
+
+
+
 class Sentences:
     def __init__(self, file_path: str, limit: int = None, blacklist: List[str] = []):
         self.file_path = file_path
@@ -109,7 +139,7 @@ def line_to_sentence(line: str, blacklist: List[str] = []) -> List[str]:
 
 
 class Word2VecModelStorage:
-    def __init__(self, name, get_model=None, base_path=DATA_PATH):
+    def __init__(self, name, get_model=None, base_path='/home/julius/prj/knowledge-mining/data/'):
         self.file_sentences = '{}/{}.sentences'.format(base_path, name)
         self.file_model = '{}/{}.model'.format(base_path, name)
         self.trained_duration = None
@@ -125,3 +155,9 @@ class Word2VecModelStorage:
 
     def load_or_train(self):
         return self.load() if os.path.isfile(self.file_model) else self.train_and_save()
+
+def first100k_model() -> Word2VecModel:
+    return Word2VecModelStorage('data-first-100k').load_or_train()
+
+
+frequencies = first100k_model().word_frequencies()
