@@ -9,9 +9,10 @@ class WordInfo:
         self.importance = child_count
         self.word_class = word_class
         self.nesting_level = nesting_level
-        self.is_root_subject = word_class == 'NOUN' and nesting_level == 2
+        self.is_root_noun = word_class == 'NOUN' and nesting_level == 2
         self.is_root_verb = word_class == 'VERB' and nesting_level == 1
-        self.is_not = word.lower() == 'not'
+        self.is_not = (word.lower() if word else None) == 'not'
+
 
 def sentences_from_conll(file: str = '/home/julius/prj/tensorflow-models/syntaxnet/tagged.conll') -> List[WordInfo]:
     data = open(file).read()
@@ -35,7 +36,8 @@ def sentences_from_conll(file: str = '/home/julius/prj/tensorflow-models/syntaxn
                     for index in children_indices:
                         child = sentence_graph.nodes[index]
                         next = node['nesting_level'] + 1
-                        child['nesting_level'] = min(child['nesting_level'], next) if ('nesting_level' in child) else next
+                        child['nesting_level'] = min(child['nesting_level'], next) if (
+                        'nesting_level' in child) else next
 
     return list(words_with_importance_from(sentence_graph) for sentence_graph in sentence_graphs)
 

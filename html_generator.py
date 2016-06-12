@@ -1,4 +1,4 @@
-from typing import List, Tuple
+from typing import List
 
 from conll_reader import WordInfo
 
@@ -52,17 +52,18 @@ def generate_html(sentences: List[List[WordInfo]]) -> str:
         """
     for sentence in sentences:
         for word in sentence:
-             is_root= word.is_root_subject or word.is_root_verb
-             if is_root:
-                 color = "red"
-             result += "" \
-                      "<div class=\"word{0}\">{1} \
-                       <span class=\"tooltiptext\" style=\"{2}\">{3}</span> \
-                       </div>".format(str(word.importance), word.word, color,  str(word.nesting_level) + word.word_class)
+            is_root = word.is_root_noun or word.is_root_verb
+            color = "color:red" if word.is_root_noun else "color:green" if word.is_root_verb else ''
+            result += "" \
+                  "<div class=\"word{0}\" style=\"{2}\">{1}&nbsp \
+                   <span class=\"tooltiptext\" style=\"{2}\">{3}</span> \
+                   </div>".format(str(word.importance), word.word, color,
+                                  "{1} ({0})".format(str(word.nesting_level), word.word_class))
+
 
     result += """
-        </body>
-        </html>
-        """
+            </body>
+            </html>
+            """
 
     return result
