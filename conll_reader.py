@@ -11,6 +11,7 @@ class WordInfo:
         self.nesting_level = nesting_level
         self.is_root_subject = word_class == 'NOUN' and nesting_level == 2
         self.is_root_verb = word_class == 'VERB' and nesting_level == 1
+        self.is_not = word.lower() == 'not'
 
 def sentences_from_conll(file: str = '/home/julius/prj/tensorflow-models/syntaxnet/tagged.conll') -> List[WordInfo]:
     data = open(file).read()
