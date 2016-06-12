@@ -49,7 +49,7 @@ def generate_html(sentences: List[List[WordInfo]]) -> str:
             result += "" \
                       "<div class=\"word{0}\">{1} \
                        <span class=\"tooltiptext\">{2}</span> \
-                       </div>".format(str(word.importance), word.word, word.word_class)
+                       </div>".format(str(word.importance), word.word, str(word.nesting_level) + word.word_class)
             result += " "
 
     result += """
