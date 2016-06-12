@@ -4,6 +4,7 @@ from conll_reader import WordInfo
 
 
 def generate_html(sentences: List[List[WordInfo]]) -> str:
+    color=""
     result = """<!DOCTYPE html>
         <html>
         <head>
@@ -39,18 +40,22 @@ def generate_html(sentences: List[List[WordInfo]]) -> str:
             visibility: visible;
             opacity: 1;
         }
-
         </style>
         </head>
         <body>
         """
     for sentence in sentences:
         for word in sentence:
-            result += "" \
+             is_root= word.is_root_subject or word.is_root_verb
+             if is_root:
+                 color = "red"
+             result += "" \
                       "<div class=\"word{0}\">{1} \
-                       <span class=\"tooltiptext\">{2}</span> \
-                       </div>".format(str(word.importance), word.word, word.word_class)
-            result += " "
+                       <span class=\"tooltiptext\" style=\"{2}\">{3}</span> \
+                       </div>".format(str(word.importance), word.word, color, word.word_class)
+             result += " "
+
+        
 
     result += """
         </body>
