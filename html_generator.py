@@ -51,17 +51,8 @@ def generate_html(sentences: List[List[WordInfo]]) -> str:
                  color = "red"
              result += "" \
                       "<div class=\"word{0}\">{1} \
-<<<<<<< HEAD
                        <span class=\"tooltiptext\" style=\"{2}\">{3}</span> \
-                       </div>".format(str(word.importance), word.word, color, word.word_class)
-             result += " "
-
-        
-=======
-                       <span class=\"tooltiptext\">{2}</span> \
-                       </div>".format(str(word.importance), word.word, str(word.nesting_level) + word.word_class)
-            result += " "
->>>>>>> eaf1e167b1ef62b38b4f4a53fd73f7327d2c2bef
+                       </div>".format(str(word.importance), word.word, color,  str(word.nesting_level) + word.word_class)
 
     result += """
         </body>
